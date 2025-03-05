@@ -5,10 +5,13 @@ import lk.ijse.gdse.supermarket.dao.Custom.CustomerDao;
 import lk.ijse.gdse.supermarket.dao.DAOFactory;
 import lk.ijse.gdse.supermarket.dto.CustomerDTO;
 import lk.ijse.gdse.supermarket.entity.Customer;
+import org.modelmapper.ModelMapper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CustomerBOImpl implements CustomerBO {
     CustomerDao customerDao = (CustomerDao) DAOFactory.getInstance().getDao(DAOFactory.DAOType.CUSTOMER);
@@ -20,40 +23,23 @@ public class CustomerBOImpl implements CustomerBO {
 
     @Override
     public List<CustomerDTO> getAllCustomers() throws SQLException {
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
-        List<Customer> customers = customerDao.getALL();
-        for (Customer customer : customers) {
-            customerDTOS.add(new CustomerDTO(
-               customer.getId(),
-               customer.getName(),
-               customer.getNic(),
-               customer.getEmail(),
-               customer.getPhone()
-            ));
-        }
-        return customerDTOS;
+      /*  List<Customer> customers = customerDao.getALL();
+        return customers.stream()
+                .map(customer -> new ModelMapper().map(customer, CustomerDTO.class))
+                .collect(Collectors.toList());*/
+        return null;
     }
 
     @Override
     public boolean saveCustomer(CustomerDTO customerDTO) throws SQLException {
-       return customerDao.save(new Customer(
-          customerDTO.getId(),
-          customerDTO.getName(),
-          customerDTO.getNic(),
-          customerDTO.getEmail(),
-          customerDTO.getPhone()
-        ));
+        Customer customer = new ModelMapper().map(customerDTO, Customer.class);
+        return customerDao.save(customer);
     }
 
     @Override
     public boolean updateCustomer(CustomerDTO customerDTO) throws SQLException {
-        return customerDao.update(new Customer(
-                customerDTO.getId(),
-                customerDTO.getName(),
-                customerDTO.getNic(),
-                customerDTO.getEmail(),
-                customerDTO.getPhone()
-        ));
+       Customer customer = new ModelMapper().map(customerDTO, Customer.class);
+       return customerDao.update(customer);
     }
 
     @Override
@@ -62,19 +48,17 @@ public class CustomerBOImpl implements CustomerBO {
     }
 
     @Override
-    public ArrayList<String> getAllCustomerIds() throws SQLException {
+    public List<String> getAllCustomerIds() throws SQLException {
         return customerDao.getAllCustomerIds();
     }
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
-        Customer customer = customerDao.search(id);
-        return (customer != null) ?
-                new CustomerDTO(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getNic(),
-                        customer.getEmail(),
-                        customer.getPhone()) : null;
+        Optional<Customer> customer = customerDao.findByPK(id);
+        if (customer.isPresent()) {
+               CustomerDTO customerDTO = new ModelMapper().map(customer, CustomerDTO.class);
+                return customerDTO;
+    }else {
+        return null;}
     }
 }

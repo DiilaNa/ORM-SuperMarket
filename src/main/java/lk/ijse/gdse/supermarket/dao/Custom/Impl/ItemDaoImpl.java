@@ -21,7 +21,7 @@ public class ItemDaoImpl implements ItemDAO {
     @Override
     public List<Item> getALL() throws SQLException {
         Session session = factoryConfiguration.getSession();
-        Query<Item> query = session.createQuery("from Customer", Item.class);
+        Query<Item> query = session.createQuery("from Item", Item.class);
         List<Item> list = query.list();
         return list;
     }
@@ -67,11 +67,11 @@ public class ItemDaoImpl implements ItemDAO {
         Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Customer customer = session.get(Customer.class, id);
-            if (customer == null) {
+            Item item = session.get(Item.class, id);
+            if (item == null) {
                 return false;
             }
-            session.remove(customer);
+            session.remove(item);
             transaction.commit();
             return true;
         } catch (Exception e) {

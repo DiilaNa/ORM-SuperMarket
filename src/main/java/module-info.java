@@ -12,6 +12,7 @@ module lk.ijse.gdse.supermarket {
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
     requires java.naming;
+    requires modelmapper;
 
     opens lk.ijse.gdse.supermarket.entity to org.hibernate.orm.core;
     opens lk.ijse.gdse.supermarket.config to jakarta.persistence;

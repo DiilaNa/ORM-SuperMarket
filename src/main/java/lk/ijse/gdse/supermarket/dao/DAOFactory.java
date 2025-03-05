@@ -17,21 +17,14 @@ public class DAOFactory {
         }
         return daoFactory;
     }
-    public enum DAOType {
-        CUSTOMER,ITEM,ORDER,ORDER_DETAILS
-    }
-    public SuperDao getDao(DAOType type) {
-        switch (type) {
-            case CUSTOMER:
-                return new CustomerDaoImpl();
-                    case ITEM:
-                        return new ItemDaoImpl();
-                        case ORDER:
-                            return new OrderDaoImpl();
-                            case ORDER_DETAILS:
-                                return new OrderDetailDAOImpl();
-                default:
-                    return null;
-        }
+    @SuppressWarnings("unchecked")//erase warnings
+    public <T extends SuperDao> T getDao(DaoTypes type) {
+        return switch (type) {
+            case CUSTOMER -> (T) new CustomerDaoImpl();
+            case ITEM -> (T) new ItemDaoImpl();
+            case ORDER -> (T) new OrderDaoImpl();
+            case ORDER_DETAILS -> (T) new OrderDetailDAOImpl();
+            default -> null;
+        };
     }
 }
