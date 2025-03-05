@@ -1,24 +1,32 @@
 package lk.ijse.gdse.supermarket.entity;
 
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 
-// Lombok annotations to generate methods automatically and reduce boilerplate code
-@Getter                 // @Getter: Automatically generates getter methods for all fields
-@Setter                 // @Setter: Automatically generates setter methods for all fields
+// @Setter: Automatically generates setter methods for all fields
 @AllArgsConstructor     // @AllArgsConstructor: Generates a constructor with all fields as parameters
 @NoArgsConstructor      // @NoArgsConstructor: Generates a no-argument constructor
-@ToString               // @ToString: Automatically generates a string representation of the object
-
+@Data
+@Entity
+@Table(name = "orders")
 
 public class Order {
+    @Id
+    @Column(name = "order_id")
+    private String id;
 
-    private String orderId;
-    private String customerId;
-    private Date orderDate;
+    private Date date;
 
-    // @orderDetailsDTOS: A list of OrderDetailsDTO objects, each representing an item in the order
+    @ManyToOne
+    @JoinColumn(name = "cus_id")
+    private Customer customer;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetails> orderDetails;
 }
