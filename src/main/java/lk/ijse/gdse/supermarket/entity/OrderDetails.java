@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "order_details")
 
-public class OrderDetails {
+public class OrderDetails implements SuperEntity {
     @Id
     @Column(name = "order_id")
     private String id;

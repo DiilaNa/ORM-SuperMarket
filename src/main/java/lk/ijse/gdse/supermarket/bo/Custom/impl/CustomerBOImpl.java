@@ -8,6 +8,7 @@ import lk.ijse.gdse.supermarket.entity.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerBOImpl implements CustomerBO {
     CustomerDao customerDao = (CustomerDao) DAOFactory.getInstance().getDao(DAOFactory.DAOType.CUSTOMER);
@@ -18,9 +19,9 @@ public class CustomerBOImpl implements CustomerBO {
     }
 
     @Override
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException {
-        ArrayList<CustomerDTO> customerDTOS = new ArrayList<>();
-        ArrayList<Customer> customers = customerDao.getALL();
+    public List<CustomerDTO> getAllCustomers() throws SQLException {
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        List<Customer> customers = customerDao.getALL();
         for (Customer customer : customers) {
             customerDTOS.add(new CustomerDTO(
                customer.getId(),

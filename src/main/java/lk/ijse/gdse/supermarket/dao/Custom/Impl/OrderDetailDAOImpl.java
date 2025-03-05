@@ -1,27 +1,40 @@
 package lk.ijse.gdse.supermarket.dao.Custom.Impl;
 
+import lk.ijse.gdse.supermarket.config.FactoryConfiguration;
 import lk.ijse.gdse.supermarket.dao.Custom.OrderDetailDAO;
 import lk.ijse.gdse.supermarket.dao.Util;
 import lk.ijse.gdse.supermarket.entity.OrderDetails;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class OrderDetailDAOImpl implements OrderDetailDAO {
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
-    public ArrayList<OrderDetails> getALL() throws SQLException {
+    public List<OrderDetails> getALL() throws SQLException {
         return null;
     }
 
     @Override
     public boolean save(OrderDetails entity) throws SQLException {
-        return Util.execute(
-                "insert into orderdetails values (?,?,?,?)",
-                entity.getOrderId(),
-                entity.getItemId(),
-                entity.getQuantity(),
-                entity.getPrice()
-        );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
@@ -45,7 +58,9 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public OrderDetails search(String id) throws SQLException {
-        return null;
+    public Optional<OrderDetails> findByPK(String pk) throws SQLException {
+        return Optional.empty();
     }
+
+
 }

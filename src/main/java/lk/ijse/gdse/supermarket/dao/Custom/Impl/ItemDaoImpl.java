@@ -1,52 +1,87 @@
 package lk.ijse.gdse.supermarket.dao.Custom.Impl;
 
+import lk.ijse.gdse.supermarket.config.FactoryConfiguration;
 import lk.ijse.gdse.supermarket.dao.Custom.ItemDAO;
 import lk.ijse.gdse.supermarket.dao.Util;
+import lk.ijse.gdse.supermarket.entity.Customer;
 import lk.ijse.gdse.supermarket.entity.Item;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ItemDaoImpl implements ItemDAO {
+
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
-    public ArrayList<Item> getALL() throws SQLException {
-       ResultSet rst = Util.execute("select * from item");
-       ArrayList<Item> items = new ArrayList<>();
-       while (rst.next()) {
-           items.add(new Item(
-                   rst.getString(1),
-                   rst.getString(2),
-                   rst.getInt(3),
-                   rst.getDouble(4)
-           ));
-       }
-       return items;
+    public List<Item> getALL() throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        Query<Item> query = session.createQuery("from Customer", Item.class);
+        List<Item> list = query.list();
+        return list;
     }
 
     @Override
     public boolean save(Item entity) throws SQLException {
-       return Util.execute("insert into item values(?,?,?,?)",
-               entity.getItemId(),
-               entity.getItemName(),
-               entity.getQuantity(),
-               entity.getPrice()
-               );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
     public boolean update(Item entity) throws SQLException {
-        return Util.execute("update item set name=?,quantity=?,price=? where item_id=?",
-                entity.getItemName(),
-                entity.getQuantity(),
-                entity.getPrice(),
-                entity.getItemId()
-                );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.merge(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
     public boolean delete(String id) throws SQLException {
-        return Util.execute("delete from item where item_id=?",id);
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Customer customer = session.get(Customer.class, id);
+            if (customer == null) {
+                return false;
+            }
+            session.remove(customer);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
@@ -69,24 +104,22 @@ public class ItemDaoImpl implements ItemDAO {
     }
 
     @Override
-    public Item search(String id) throws SQLException {
-        ResultSet rst = Util.execute("select * from item where item_id=?", id);
-        if (rst.next()) {
-            return new Item(
-                    rst.getString(1),
-                    rst.getString(2),
-                    rst.getInt(3),
-                    rst.getDouble(4)
-            );
+    public Optional<Item> findByPK(String pk) throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        Item item = session.get(Item.class, pk);
+        session.close();
+        if (item == null) {
+            return Optional.empty();
         }
-        return null;
-
+        return Optional.of(item);
     }
 
+
+
     @Override
-    public ArrayList<String> getAllItemIds() throws SQLException {
+    public List<String> getAllItemIds() throws SQLException {
         ResultSet rst = Util.execute("select item_id from item");
-        ArrayList<String> itemIds = new ArrayList<>();
+        List<String> itemIds = new ArrayList<>();
 
         while (rst.next()) {
             itemIds.add(rst.getString(1));

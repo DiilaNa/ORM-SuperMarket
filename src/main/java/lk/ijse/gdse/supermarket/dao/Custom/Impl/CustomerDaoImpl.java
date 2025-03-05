@@ -6,28 +6,22 @@ import lk.ijse.gdse.supermarket.dao.Util;
 import lk.ijse.gdse.supermarket.entity.Customer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class CustomerDaoImpl implements CustomerDao {
     private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
-    public ArrayList<Customer> getALL() throws SQLException {
-        ResultSet rst = Util.execute("select * from customer");
-        ArrayList<Customer> customers = new ArrayList<>();
-        while (rst.next()) {
-            customers.add(new Customer(
-               rst.getString(1),
-               rst.getString(2),
-               rst.getString(3),
-               rst.getString(4),
-               rst.getString(5)
-
-            ));
-        }
-        return customers;
+    public List<Customer> getALL() throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        Query<Customer> query = session.createQuery("from Customer", Customer.class);
+        List<Customer> list = query.list();
+        return list;
 
     }
 
@@ -109,20 +103,14 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Customer search(String id) throws SQLException {
-        ResultSet rst = Util.execute("select * from customer where customer_id=?", id);
-
-        if (rst.next()) {
-            return new Customer(
-                    rst.getString(1),  // Customer ID
-                    rst.getString(2),  // Name
-                    rst.getString(3),  // NIC
-                    rst.getString(4),  // Email
-                    rst.getString(5)   // Phone
-            );
+    public Optional<Customer> findByPK(String pk) throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        Customer customer = session.get(Customer.class, pk);
+        session.close();
+        if (customer == null) {
+            return Optional.empty();
         }
-        return null;
-
+        return Optional.of(customer);
     }
 
     @Override

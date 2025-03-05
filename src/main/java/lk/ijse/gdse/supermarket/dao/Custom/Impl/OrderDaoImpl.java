@@ -1,27 +1,41 @@
 package lk.ijse.gdse.supermarket.dao.Custom.Impl;
 
+import lk.ijse.gdse.supermarket.config.FactoryConfiguration;
 import lk.ijse.gdse.supermarket.dao.Custom.OrderDAO;
 import lk.ijse.gdse.supermarket.dao.Util;
 import lk.ijse.gdse.supermarket.entity.Order;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class OrderDaoImpl implements OrderDAO {
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
-    public ArrayList<Order> getALL() throws SQLException {
+    public List<Order> getALL() throws SQLException {
         return null;
     }
 
     @Override
     public boolean save(Order entity) throws SQLException {
-      return Util.execute(
-                "insert into orders values (?,?,?)",
-                entity.getOrderId(),
-                entity.getCustomerId(),
-                entity.getOrderDate()
-        );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
@@ -60,7 +74,8 @@ public class OrderDaoImpl implements OrderDAO {
     }
 
     @Override
-    public Order search(String id) throws SQLException {
-        return null;
+    public Optional<Order> findByPK(String pk) throws SQLException {
+        return Optional.empty();
     }
+
 }

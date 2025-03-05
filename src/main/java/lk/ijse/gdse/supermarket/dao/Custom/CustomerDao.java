@@ -5,7 +5,8 @@ import lk.ijse.gdse.supermarket.entity.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-public interface CustomerDao extends CrudDAO<Customer> {
-    ArrayList<String> getAllCustomerIds() throws SQLException;
+public interface CustomerDao extends CrudDAO<Customer,String> {
+    List<String> getAllCustomerIds() throws SQLException;
 }
