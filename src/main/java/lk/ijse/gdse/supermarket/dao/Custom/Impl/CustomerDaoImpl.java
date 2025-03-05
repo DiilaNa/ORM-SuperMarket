@@ -69,7 +69,24 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean delete(String Id) throws SQLException {
-        return Util.execute("delete from customer where customer_id=?", Id);
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Customer customer = session.get(Customer.class, Id);
+            if (customer == null) {
+                return false;
+            }
+            session.remove(customer);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
