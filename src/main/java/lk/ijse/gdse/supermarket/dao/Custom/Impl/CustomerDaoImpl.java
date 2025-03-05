@@ -1,14 +1,18 @@
 package lk.ijse.gdse.supermarket.dao.Custom.Impl;
 
+import lk.ijse.gdse.supermarket.config.FactoryConfiguration;
 import lk.ijse.gdse.supermarket.dao.Custom.CustomerDao;
 import lk.ijse.gdse.supermarket.dao.Util;
 import lk.ijse.gdse.supermarket.entity.Customer;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CustomerDaoImpl implements CustomerDao {
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
     @Override
     public ArrayList<Customer> getALL() throws SQLException {
         ResultSet rst = Util.execute("select * from customer");
@@ -29,14 +33,20 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean save(Customer entity) throws SQLException {
-        return Util.execute(
-                "insert into customer values (?,?,?,?,?)",
-                entity.getId(),
-                entity.getName(),
-                entity.getNic(),
-                entity.getEmail(),
-                entity.getPhone()
-        );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
