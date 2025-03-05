@@ -51,14 +51,20 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean update(Customer entity) throws SQLException {
-        return Util.execute(
-                "update customer set name=?, nic=?, email=?, phone=? where customer_id=?",
-                entity.getName(),
-                entity.getNic(),
-                entity.getEmail(),
-                entity.getPhone(),
-                entity.getId()
-        );
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.merge(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
