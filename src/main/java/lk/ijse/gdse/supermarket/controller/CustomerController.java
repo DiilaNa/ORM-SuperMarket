@@ -89,7 +89,7 @@ public class CustomerController implements Initializable {
     @FXML
     private Button btnUpdate;
 
-    CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOType.CUSTOMER);
+    CustomerBO customerBO =  BOFactory.getInstance().getBO(BOFactory.BOType.CUSTOMER);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -129,7 +129,7 @@ public class CustomerController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<CustomerDTO> customerDTOS = customerBO.getAllCustomers();
+        List<CustomerDTO> customerDTOS = customerBO.getAllCustomers();
         ObservableList<CustomerTM> customerTMS = FXCollections.observableArrayList();
 
 //        ObservableList<CustomerTM> customerTMS = FXCollections.observableArrayList();

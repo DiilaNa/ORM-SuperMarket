@@ -3,6 +3,7 @@ package lk.ijse.gdse.supermarket.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -13,16 +14,22 @@ import java.util.List;
 @Table(name = "order_details")
 
 public class OrderDetails implements SuperEntity {
-    @Id
-    @Column(name = "order_id")
-    private String id;
 
-    private Date date;
+    @Id
+    private OrderDetailsId id;
 
     @ManyToOne
-    @JoinColumn(name = "cus_id")
-    private Customer customer;
+    @MapsId("orderId")
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetails> orderDetails;
+    @ManyToOne
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    private int qty;
+
+    @Column(name = "unit_price", precision = 10, scale = 2)
+    private BigDecimal unitPrice;
 }

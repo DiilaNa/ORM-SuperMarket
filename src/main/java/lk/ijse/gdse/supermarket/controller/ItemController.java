@@ -19,6 +19,7 @@ import lk.ijse.gdse.supermarket.dto.tm.ItemTM;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -81,7 +82,7 @@ public class ItemController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<ItemDTO> itemDTOS = itemBO.getAllItemList();
+        List<ItemDTO> itemDTOS = itemBO.getAllItemList();
         ObservableList<ItemTM> itemTMS = FXCollections.observableArrayList();
 
         for (ItemDTO itemDTO : itemDTOS) {

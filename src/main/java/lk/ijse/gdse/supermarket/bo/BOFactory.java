@@ -16,16 +16,16 @@ public class BOFactory {
     public enum BOType {
         CUSTOMER,ITEM,ORDER
     }
-    public SuperBO getBO(BOType type) {
+    public <T extends SuperBO>T getBO(BOType type) {
         switch (type) {
             case CUSTOMER:
-                return new CustomerBOImpl();
+                return (T)new CustomerBOImpl();
                 case ITEM:
-                    return new ItemBOImpl();
+                    return (T) new ItemBOImpl();
                     case ORDER:
-                        return new OrderBOImpl();
+                        return (T) new OrderBOImpl();
                 default:
                     return null;
         }
-    }
-}
+    }}
+

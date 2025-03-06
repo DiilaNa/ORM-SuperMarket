@@ -16,7 +16,7 @@ module lk.ijse.gdse.supermarket {
 
     opens lk.ijse.gdse.supermarket.entity to org.hibernate.orm.core;
     opens lk.ijse.gdse.supermarket.config to jakarta.persistence;
-
+    opens lk.ijse.gdse.supermarket.dto to modelmapper;
     opens lk.ijse.gdse.supermarket.dto.tm to javafx.base;
     opens lk.ijse.gdse.supermarket.controller to javafx.fxml;
     exports lk.ijse.gdse.supermarket;
