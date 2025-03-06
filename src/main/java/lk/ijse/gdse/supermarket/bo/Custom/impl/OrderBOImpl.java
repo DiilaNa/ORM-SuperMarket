@@ -11,6 +11,7 @@ import lk.ijse.gdse.supermarket.dto.OrderDTO;
 import lk.ijse.gdse.supermarket.dto.OrderDetailsDTO;
 import lk.ijse.gdse.supermarket.entity.Order;
 import lk.ijse.gdse.supermarket.entity.OrderDetails;
+import org.modelmapper.ModelMapper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,24 +35,16 @@ public class OrderBOImpl implements OrderBO {
 
 
             for (OrderDTO orderDTO : orderDTOS) {
-                boolean b2 = orderDAO.save(new Order(
-                        orderDTO.getOrderId(),
-                        orderDTO.getCustomerId(),
-                        orderDTO.getOrderDate()
-                ));
+                Order order = new ModelMapper().map(orderDTO, Order.class);
+                boolean b2 = orderDAO.save(order);
                 if (!b2){
                     connection.rollback();
                     return false;
                 }
-
             }
             for (OrderDetailsDTO orderDetailsDTO : orderDetailsDTOS) {
-                boolean b1= orderDetailDAO.save(new OrderDetails(
-                        orderDetailsDTO.getOrderId(),
-                        orderDetailsDTO.getItemId(),
-                        orderDetailsDTO.getQuantity(),
-                        orderDetailsDTO.getPrice()
-                ));
+                OrderDetails orderDetails = new ModelMapper().map(orderDetailsDTO, OrderDetails.class);
+                boolean b1= orderDetailDAO.save(orderDetails);
                 if (!b1){
                     connection.rollback();
                     return false;

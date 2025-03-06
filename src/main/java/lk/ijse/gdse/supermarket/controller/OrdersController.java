@@ -27,6 +27,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class OrdersController implements Initializable {
@@ -138,7 +139,7 @@ public class OrdersController implements Initializable {
      * Load all item IDs into the item ComboBox.
      */
     private void loadItemId() throws SQLException {
-        ArrayList<String> itemIds = itemBO.getAllItemIds();
+        List<String> itemIds = itemBO.getAllItemIds();
         ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(itemIds);
         cmbItemId.setItems(observableList);
@@ -148,7 +149,7 @@ public class OrdersController implements Initializable {
      * Load all customer IDs into the customer ComboBox.
      */
     private void loadCustomerIds() throws SQLException {
-        ArrayList<String> customerIds = customerBO.getAllCustomerIds();
+        List<String> customerIds = customerBO.getAllCustomerIds();
         ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(customerIds);
        cmbCustomerId.setItems(observableList);
