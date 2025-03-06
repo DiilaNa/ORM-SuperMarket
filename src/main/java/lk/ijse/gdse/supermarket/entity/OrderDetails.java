@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderDetails implements SuperEntity {
 
     @Id
-    private OrderDetailsId id;
+    private OrderDetailsId orderId;
 
     @ManyToOne
     @MapsId("orderId")
@@ -26,10 +26,11 @@ public class OrderDetails implements SuperEntity {
     @ManyToOne
     @MapsId("itemId")
     @JoinColumn(name = "item_id")
-    private Item item;
+    private Item itemId;
 
-    private int qty;
+    private int quantity;
 
     @Column(name = "unit_price", precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    private BigDecimal price;
+
 }

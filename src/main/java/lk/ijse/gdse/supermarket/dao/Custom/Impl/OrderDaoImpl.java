@@ -22,6 +22,7 @@ public class OrderDaoImpl implements OrderDAO {
 
     @Override
     public boolean save(Order entity) throws SQLException {
+        System.out.println(entity);
         Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
         try {

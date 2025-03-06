@@ -67,9 +67,9 @@ public class OrdersController implements Initializable {
     private TextField txtAddToCartQty;
 
     // Models to manage data interactions with database or logic layers
-    CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOType.CUSTOMER);
-    ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOType.ITEM);
-    OrderBO orderBO = (OrderBO) BOFactory.getInstance().getBO(BOFactory.BOType.ORDER);
+    CustomerBO customerBO =  BOFactory.getInstance().getBO(BOFactory.BOType.CUSTOMER);
+    ItemBO itemBO =  BOFactory.getInstance().getBO(BOFactory.BOType.ITEM);
+    OrderBO orderBO =  BOFactory.getInstance().getBO(BOFactory.BOType.ORDER);
 
     // Observable list to manage cart items in TableView
     private final ObservableList<CartTM> cartTMS = FXCollections.observableArrayList();

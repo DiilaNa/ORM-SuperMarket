@@ -19,13 +19,13 @@ import java.util.List;
 public class Order implements SuperEntity {
     @Id
     @Column(name = "order_id")
-    private String id;
+    private String orderId;
 
-    private Date date;
+    private Date orderDate;
 
     @ManyToOne
     @JoinColumn(name = "cus_id")
-    private Customer customer;
+    private Customer customerId;
 
     @OneToMany(mappedBy = "order")
     private List<OrderDetails> orderDetails;

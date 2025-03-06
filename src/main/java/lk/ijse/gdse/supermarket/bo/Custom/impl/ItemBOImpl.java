@@ -37,7 +37,7 @@ public class ItemBOImpl implements ItemBO {
 
     @Override
     public List<ItemDTO> getAllItemList() throws SQLException {
-       List<String>items = itemDAO.getAllItemIds();
+       List<Item>items = itemDAO.getALL();
        return items.stream().map(item -> new ModelMapper().map(item, ItemDTO.class)).collect(Collectors.toList());
     }
 

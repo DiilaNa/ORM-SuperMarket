@@ -65,7 +65,7 @@ public class ItemController implements Initializable {
     private TextField txtQuantity;
 
 //    private final ItemModel itemModel = new ItemModel();
-    ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOType.ITEM);
+    ItemBO itemBO =  BOFactory.getInstance().getBO(BOFactory.BOType.ITEM);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

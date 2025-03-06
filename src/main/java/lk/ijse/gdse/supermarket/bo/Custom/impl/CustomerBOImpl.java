@@ -25,8 +25,7 @@ public class CustomerBOImpl implements CustomerBO {
     @Override
     public List<CustomerDTO> getAllCustomers() throws SQLException {
         List<Customer> customers = customerDao.getALL();
-        return customers.stream()
-                .map(customer -> new ModelMapper().map(customer, CustomerDTO.class))
+        return customers.stream().map(customer -> new ModelMapper().map(customer, CustomerDTO.class))
                 .collect(Collectors.toList());
     }
 

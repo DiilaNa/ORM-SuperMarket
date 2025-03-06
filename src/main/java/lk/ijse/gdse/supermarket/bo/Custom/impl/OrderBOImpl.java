@@ -63,7 +63,6 @@ public class OrderBOImpl implements OrderBO {
         } catch (Exception e) {
            if (connection != null){
                connection.rollback();
-
            }
            e.printStackTrace();
            return false;
