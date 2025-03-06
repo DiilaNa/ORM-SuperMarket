@@ -6,60 +6,49 @@ import lk.ijse.gdse.supermarket.dao.DAOFactory;
 import lk.ijse.gdse.supermarket.dao.DaoTypes;
 import lk.ijse.gdse.supermarket.dto.ItemDTO;
 import lk.ijse.gdse.supermarket.entity.Item;
+import org.modelmapper.ModelMapper;
 
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ItemBOImpl implements ItemBO {
     ItemDAO itemDAO =  DAOFactory.getInstance().getDao(DaoTypes.ITEM);
 
     @Override
     public boolean saveItem(ItemDTO itemDTO) throws SQLException {
-        return itemDAO.save(new Item(
-                itemDTO.getItemId(),
-                itemDTO.getItemName(),
-                itemDTO.getQuantity(),
-                itemDTO.getPrice()
-        ));
+        Item item = new ModelMapper().map(itemDTO, Item.class);
+        return itemDAO.save(item);
     }
 
     @Override
     public boolean updateItem(ItemDTO itemDTO) throws SQLException {
-        return itemDAO.update(new Item(
-                itemDTO.getItemId(),
-                itemDTO.getItemName(),
-                itemDTO.getQuantity(),
-                itemDTO.getPrice()
-        ));
+       Item item = new ModelMapper().map(itemDTO, Item.class);
+       return itemDAO.update(item);
     }
 
     @Override
     public boolean deleteItem(String id) throws SQLException {
-        return itemDAO.delete(id);
+      return itemDAO.delete(id);
     }
 
     @Override
     public List<ItemDTO> getAllItemList() throws SQLException {
-        List<ItemDTO> list = new ArrayList<>();
-        List<Item>items = itemDAO.getALL();
-        for (Item item : items) {
-            list.add(new ItemDTO(item.getItemId(),item.getItemName(),item.getQuantity(),item.getPrice()));
-        }
-        return list;
+       List<String>items = itemDAO.getAllItemIds();
+       return items.stream().map(item -> new ModelMapper().map(item, ItemDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public ItemDTO searchItem(String id) throws SQLException, ClassNotFoundException {
-
-        Item item= itemDAO.search(id);
-        return(item!=null)?
-                new ItemDTO(
-               item.getItemId(),
-               item.getItemName(),
-               item.getQuantity(),
-               item.getPrice()):null;
+        Optional<Item> item = itemDAO.findByPK(id);
+        if (item.isPresent()) {
+            return new ModelMapper().map(item.get(), ItemDTO.class);
+        }else {
+            return null;
+        }
     }
 
     @Override
