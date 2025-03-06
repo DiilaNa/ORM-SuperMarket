@@ -3,6 +3,7 @@ package lk.ijse.gdse.supermarket.bo.Custom.impl;
 import lk.ijse.gdse.supermarket.bo.Custom.CustomerBO;
 import lk.ijse.gdse.supermarket.dao.Custom.CustomerDao;
 import lk.ijse.gdse.supermarket.dao.DAOFactory;
+import lk.ijse.gdse.supermarket.dao.DaoTypes;
 import lk.ijse.gdse.supermarket.dto.CustomerDTO;
 import lk.ijse.gdse.supermarket.entity.Customer;
 import org.modelmapper.ModelMapper;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomerBOImpl implements CustomerBO {
-    CustomerDao customerDao = (CustomerDao) DAOFactory.getInstance().getDao(DAOFactory.DAOType.CUSTOMER);
+    CustomerDao customerDao =  DAOFactory.getInstance().getDao(DaoTypes.CUSTOMER);
 
     @Override
     public String getNextCustomerId() throws SQLException {
